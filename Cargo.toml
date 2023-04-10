@@ -1,5 +1,5 @@
 [package]
-name = "flappy"
+name = "flappydragon"
 version = "0.1.0"
 authors = ["Eric Litwin"]
 edition = "2021"
