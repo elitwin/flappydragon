@@ -116,32 +116,26 @@ impl State {
 
     fn main_menu(&mut self, ctx: &mut BTerm) {
         ctx.cls();
-        ctx.print_centered(5, "Welcome to Flappy Dragon");
-        ctx.print_centered(8, "(P) Play Game");
-        ctx.print_centered(9, "(Q) Quit Game");
+        match self.mode {
+            GameMode::Menu => {
+                ctx.print_centered(5, "Welcome to Flappy Dragon");
+                ctx.print_centered(8, "(P) Play Game");
+                ctx.print_centered(9, "(Q) Quit Game");
+            }
+            GameMode::End => {
+                ctx.print_centered(5, "You are dead!");
+                ctx.print_centered(6, &format!("You earned {} points", self.score));
+                ctx.print_centered(8, "(P) Play Again");
+                ctx.print_centered(9, "(Q) Quit Game");
+            }
+            GameMode::Playing => {}
+        }
 
         if let Some(key) = ctx.key {
             match key {
                 VirtualKeyCode::P => self.restart(),
                 VirtualKeyCode::Q => ctx.quitting = true,
                 _ => {} // Do nothing: '_' is a catch-all
-            }
-        }
-    }
-
-    fn dead(&mut self, ctx: &mut BTerm) {
-        // TODO - DRY this code - it mostly duplicates main_menu
-        ctx.cls();
-        ctx.print_centered(5, "You are dead!");
-        ctx.print_centered(6, &format!("You earned {} points", self.score));
-        ctx.print_centered(8, "(P) Play Again");
-        ctx.print_centered(9, "(Q) Quit Game");
-
-        if let Some(key) = ctx.key {
-            match key {
-                VirtualKeyCode::P => self.restart(),
-                VirtualKeyCode::Q => ctx.quitting = true,
-                _ => {}
             }
         }
     }
@@ -174,9 +168,8 @@ impl State {
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
         match self.mode {
-            GameMode::Menu => self.main_menu(ctx),
+            GameMode::Menu | GameMode::End => self.main_menu(ctx),
             GameMode::Playing => self.play(ctx),
-            GameMode::End => self.dead(ctx),
         }
     }
 }
