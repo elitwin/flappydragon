@@ -530,7 +530,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "flappy"
+name = "flappydragon"
 version = "0.1.0"
 dependencies = [
  "bracket-lib",
